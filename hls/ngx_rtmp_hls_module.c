@@ -30,7 +30,7 @@ static ngx_int_t ngx_rtmp_hls_ensure_directory(ngx_rtmp_session_t *s,
 
 
 #define NGX_RTMP_HLS_BUFSIZE            (1024*1024)
-#define NGX_RTMP_HLS_DIR_ACCESS         0744
+#define NGX_RTMP_HLS_DIR_ACCESS         0755
 
 
 typedef struct {
@@ -891,9 +891,11 @@ ngx_rtmp_hls_open_fragment(ngx_rtmp_session_t *s, uint64_t ts,
             }
 
             ngx_sprintf(ctx->keyfile.data + ctx->keyfile.len, "%uL.key%Z", id);
-
+            ngx_log_debug1(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
+                      "SJYOON:TESTLOG: %s", ctx->keyfile.data );
+           
             fd = ngx_open_file(ctx->keyfile.data, NGX_FILE_WRONLY,
-                               NGX_FILE_TRUNCATE, NGX_FILE_DEFAULT_ACCESS);
+                               NGX_FILE_TRUNCATE, 0655);
 
             if (fd == NGX_INVALID_FILE) {
                 ngx_log_error(NGX_LOG_ERR, s->connection->log, ngx_errno,
